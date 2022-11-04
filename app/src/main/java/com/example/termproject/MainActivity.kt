@@ -8,7 +8,4 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-    fun main(args: Array<String>) {
-        println("Hello, world!")
-    }
 }
