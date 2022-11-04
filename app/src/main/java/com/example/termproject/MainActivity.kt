@@ -10,5 +10,6 @@ class MainActivity : AppCompatActivity() {
 
         println("aaaaaaaa");
         println("aaaa");
+        println("1771046");
     }
 }
