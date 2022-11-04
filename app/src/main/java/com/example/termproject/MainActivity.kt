@@ -11,5 +11,7 @@ class MainActivity : AppCompatActivity() {
         println("aaaaaaaa");
         println("jeonghan");
         println("jeonghan");
+
+        println("aaaaaaaaaaaaaa")
     }
 }
