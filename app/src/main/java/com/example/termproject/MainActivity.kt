@@ -9,5 +9,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         println("aaaaaaaa");
+        println("jeonghan");
+        println("jeonghan");
     }
 }
