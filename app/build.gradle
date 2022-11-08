@@ -43,8 +43,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
+
 task wrapper(type: Wrapper) {
     gradleVersion = '7.0'
 }
 
 tasks.register("prepareKotlinBuildScriptModel"){}
+
+
