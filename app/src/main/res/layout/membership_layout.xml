@@ -6,39 +6,17 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/PhoneNum"
-        android:layout_width="270dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="전화번호"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.343"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/Certification_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="인증"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/PhoneNum"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
         android:id="@+id/ID"
         android:layout_width="270dp"
         android:layout_height="60dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="104dp"
         android:ems="10"
         android:hint="ID"
         android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumber"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/PasswordCheck"
@@ -69,28 +47,29 @@
         android:text="회원가입"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.779"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PasswordCheck"
+        app:layout_constraintVertical_bias="0.131" />
+
+    <Button
+        android:id="@+id/Check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="확인"
+        app:layout_constraintEnd_toStartOf="@+id/Membership_btn"
+        app:layout_constraintHorizontal_bias="0.445"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/Membership_btn" />
+
+    <TextView
+        android:id="@+id/checktextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Non Checked"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PasswordCheck" />
 
-    <EditText
-        android:id="@+id/editTextNumber"
-        android:layout_width="270dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="Number"
-        android:inputType="number"
-        app:layout_constraintStart_toStartOf="@+id/PhoneNum"
-        app:layout_constraintTop_toBottomOf="@+id/PhoneNum" />
-
-    <Button
-        android:id="@+id/Check_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="확인"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumber"
-        app:layout_constraintTop_toBottomOf="@+id/Certification_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>
