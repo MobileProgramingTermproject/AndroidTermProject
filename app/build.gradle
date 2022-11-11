@@ -31,6 +31,17 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildscript{ //Firebase Crashlytics - 앱이 비정상 종료되었을 때 예외 로그를 Firebase에 남기고 확인할 수 있게 해줌
+        repositories{
+            google()
+        }
+
+        dependencies{
+            classpath 'com.google.gms:google-services:4.3.14'
+            classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
+        }
+    }
 }
 
 dependencies {
