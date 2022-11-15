@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() { //로그인
                     if(it.isSuccessful) {//성공 시 표시
                         println("######Login Success ${ID} ${PassWord}")
                         findViewById<TextView>(R.id.CheckLogin).setText("Login Success ${ID} ${PassWord}") //화면에 표시
+                        setContentView(R.layout.main_layout)
                     }else {//실패 시 표시
                         println("######Login Failed ${it.exception?.message} ${ID} ${PassWord}")
                         findViewById<TextView>(R.id.CheckLogin).setText("Login Failed ${it.exception?.message} ${ID} ${PassWord}") //화면에 표시
