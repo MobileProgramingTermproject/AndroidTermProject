@@ -1,5 +1,6 @@
 package com.example.termproject
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -34,7 +35,9 @@ class MembershipActivity : AppCompatActivity() {
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
                             println("######Sign-up Success")
-                            finish()    //성공했으면 원래 액티비티로 복귀
+                            Firebase.auth.signInWithEmailAndPassword(Id.toString()+"@29.com", Password.toString())
+                            val intent = Intent(this, ProfileActivity::class.java) //intent 생성 this에서 homeActivity로 이동
+                            startActivity(intent)
                         } else {
                             println("######Sign-up Login Failed ${it.exception?.message}")
                             findViewById<TextView>(R.id.checktextView).setText("Signup failed ${it.exception?.message}")
