@@ -19,20 +19,21 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        val Name = findViewById<EditText>(R.id.Name_Profile).text.toString()
-        val Phone = findViewById<EditText>(R.id.Phone_Profile).text.toString()
-        val Birth = findViewById<EditText>(R.id.Birthday_Profile).text.toString()
-        val Email = findViewById<EditText>(R.id.Email_Profile).text.toString()
+
 
 
         findViewById<Button>(R.id.Save_Profile).setOnClickListener {
+            val Name = findViewById<EditText>(R.id.Name_Profile).text.toString()
+            val Phone = findViewById<EditText>(R.id.Phone_Profile).text.toString()
+            val Birth = findViewById<EditText>(R.id.Birthday_Profile).text.toString()
+            val Email = findViewById<EditText>(R.id.Email_Profile).text.toString()
             val intent = Intent(this, HomeActivity::class.java) //intent 생성 this에서 homeActivity로 이동
             val user = Firebase.auth.currentUser
-            val db: FirebaseFirestore = Firebase.firestore
+            val db = Firebase.firestore
 
             println("######회원 정보 등록 시도")
-            println("${Name}, ${Phone.length}, ${Birth.length}, ${Email.length}, ")
-//            if(Name.length > 0 && Phone.length > 0 && Birth.length > 0 && Email.length > 0) {
+            println("${Name.length}, ${Phone.length}, ${Birth.length}, ${Email.length}, ")
+            if(Name.length > 0 && Phone.length > 0 && Birth.length > 0 && Email.length > 0) {
                 val memberinfo = MemberInfo(Name, Phone, Birth, Email)
                 println("######회원 정보 등록 시도1")
                 if (user != null) {
@@ -47,7 +48,7 @@ class ProfileActivity : AppCompatActivity() {
                             startActivity(intent)
                         }
                 }
-//            }
+            }
         }
 
 
