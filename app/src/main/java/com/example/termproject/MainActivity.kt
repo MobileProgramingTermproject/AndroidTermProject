@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() { //로그인
                         println("######Login Success ${ID} ${PassWord}")
                         findViewById<TextView>(R.id.CheckLogin).setText("Login Success ${ID} ${PassWord}") //화면에 표시
                         setContentView(R.layout.main_layout)
-                        val intent2 = Intent(this, AddPostActivity::class.java) //intent 생성 this에서 MembershipActivity로 이동
+                        val intent2 = Intent(this, HomeActivity::class.java) //intent 생성 this에서 homeActivity로 이동
                         startActivity(intent2)
                     }else {//실패 시 표시
                         println("######Login Failed ${it.exception?.message} ${ID} ${PassWord}")

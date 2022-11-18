@@ -1,5 +1,6 @@
 package com.example.termproject
 
+import android.app.Activity
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.ImageView
@@ -11,7 +12,6 @@ class AddPostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.addpost_layout)
-
         //throw RuntimeException("################")
 
         val rootRef = Firebase.storage.reference
@@ -22,6 +22,7 @@ class AddPostActivity : AppCompatActivity() {
                 val bmp = BitmapFactory.decodeByteArray(it.result,0,it.result!!.size)
                 val imgView = findViewById<ImageView>(R.id.imageView)
                 imgView.setImageBitmap(bmp)
+                finish();
             }
         }
     }
