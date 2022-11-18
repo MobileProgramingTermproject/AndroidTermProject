@@ -30,7 +30,7 @@ class MembershipActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.Membership_btn).setOnClickListener {
             if(findViewById<TextView>(R.id.checktextView).text.toString().equals("Checked")) { //비밀번호 확인이 됬으면 Firebase Signup 시도
-                Firebase.auth.createUserWithEmailAndPassword(Id.toString(), Password.toString())
+                Firebase.auth.createUserWithEmailAndPassword(Id.toString()+"@29.com", Password.toString())
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
                             println("######Sign-up Success")

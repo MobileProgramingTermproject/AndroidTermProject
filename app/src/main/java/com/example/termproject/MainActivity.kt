@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() { //로그인
         val PassWord = findViewById<EditText>(R.id.editTextTextPassword).text
 
         findViewById<Button>(R.id.button_login).setOnClickListener{ //로그인 버튼 클릭
-            Firebase.auth.signInWithEmailAndPassword(ID.toString(), PassWord.toString()) //파이어베이스 로그인 시도
+            Firebase.auth.signInWithEmailAndPassword(ID.toString()+"@29.com", PassWord.toString()) //파이어베이스 로그인 시도
                 .addOnCompleteListener {
                     if(it.isSuccessful) {//성공 시 표시
                         println("######Login Success ${ID} ${PassWord}")
