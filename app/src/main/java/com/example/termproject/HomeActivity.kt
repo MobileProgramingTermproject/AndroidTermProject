@@ -29,5 +29,10 @@ class HomeActivity:AppCompatActivity() {
             val intent3 = Intent(this, MainActivity::class.java) //intent 생성 this에서 MembershipActivity로 이동
             startActivity(intent3)
         }
+
+        findViewById<Button>(R.id.Button_Friends).setOnClickListener {
+            val intent4 = Intent(this, FriendsActivity::class.java)
+            startActivity(intent4)
+        }
     }
 }

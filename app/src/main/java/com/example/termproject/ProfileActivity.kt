@@ -60,7 +60,7 @@ class ProfileActivity : AppCompatActivity() {
             println("######회원 정보 등록 시도")
             println("${Name.length}, ${Phone.length}, ${Birth.length}, ${Email.length}, ")
             if(Name.length > 0 && Phone.length > 0 && Birth.length > 0 && Email.length > 0) {
-                val memberinfo = MemberInfo(Name, Phone, Birth, Email)
+                val memberinfo = MemberInfo(user?.uid, Name, Phone, Birth, Email)
                 println("######회원 정보 등록 시도1")
                 if (user != null) {
                     println("######회원 정보 등록 시도2")
