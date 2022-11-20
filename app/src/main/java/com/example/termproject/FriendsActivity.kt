@@ -61,7 +61,7 @@ class FriendsActivity : AppCompatActivity() {
 
                 println("ViewHolder 내용 ${user_name_list}")
                 itemView.findViewById<Button>(R.id.friend_add).setOnClickListener {
-                    //친구 추가
+                    //친구 추가 메세지 보내기
                 }
             }
 
