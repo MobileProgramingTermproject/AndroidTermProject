@@ -11,6 +11,8 @@ import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FieldValue.arrayUnion
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -53,18 +55,56 @@ class FriendsActivity : AppCompatActivity() {
             lateinit var user_img_list: ImageView
             lateinit var user_uid_list: TextView
             lateinit var user_name_list: TextView
-
+            lateinit var btn: Button
+            
             init {
                 user_img_list = itemView.findViewById(R.id.user_img_list)
                 user_uid_list = itemView.findViewById(R.id.user_uid_list)
                 user_name_list = itemView.findViewById(R.id.user_name_list)
+                btn = itemView.findViewById<Button>(R.id.friend_add)
+                val user = Firebase.auth.currentUser
+                val db = Firebase.firestore
 
+//                db.collection("users").document(user!!.uid)
+//                    .get()
+//                    .addOnSuccessListener {
+//                        val friendlist: ArrayList<String> = it.data!!.get("friends") as ArrayList<String>
+//                        if(friendlist.contains(user_uid_list.text.toString())){
+//                            itemView.findViewById<Button>(R.id.friend_add).text = "친구 삭제"
+//                        }else
+//                            itemView.findViewById<Button>(R.id.friend_add).text = "친구 추가"
+//                    }
+//                    .addOnFailureListener {
+//                    }
+                
                 println("ViewHolder 내용 ${user_name_list}")
                 itemView.findViewById<Button>(R.id.friend_add).setOnClickListener {
-                    //친구 추가 메세지 보내기
+                    //친구 추가
+                    if(itemView.findViewById<Button>(R.id.friend_add).text.equals("친구 추가")) {
+                        db.collection("users").document(user!!.uid)
+                            .update("friends", FieldValue.arrayUnion(user_uid_list.text.toString()))
+                            .addOnSuccessListener {
+                                println("${user_name_list.text.toString()} 친구 추가")
+                                itemView.findViewById<Button>(R.id.friend_add).text = "친구 삭제"
+                                users = tempUsers()
+                            }
+                            .addOnFailureListener {
+                                println("${user_name_list.text.toString()} 친구 추가 실패")
+                            }
+                    }else{
+                        db.collection("users").document(user!!.uid)
+                            .update("friends", FieldValue.arrayRemove(user_uid_list.text.toString()))
+                            .addOnSuccessListener {
+                                println("${user_name_list.text.toString()} 친구 삭제")
+                                itemView.findViewById<Button>(R.id.friend_add).text = "친구 추가"
+                                users = tempUsers()
+                            }
+                            .addOnFailureListener {
+                                println("${user_name_list.text.toString()} 친구 삭제 실패")
+                            }
+                    }
                 }
             }
-
         }
 
         init {
@@ -82,8 +122,9 @@ class FriendsActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val user: Friend = filteredUsers[position]
 
-            holder.user_uid_list.text = user.uid//uid로 변경 예정
+            holder.user_uid_list.text = user.uid
             holder.user_name_list.text = user.name
+            holder.btn.text = user.button
         }
 
         override fun getItemCount(): Int {
@@ -151,23 +192,45 @@ class FriendsActivity : AppCompatActivity() {
 
     fun tempUsers(): ArrayList<Friend> {
         println("tempUser 실행 중")
+        val user = Firebase.auth.currentUser
         val db = Firebase.firestore
-        var member = Friend("", "")
+        var member = Friend("", "", "")
         val temp_user = ArrayList<Friend>()
 
-        db.collection("users")
-            .whereEqualTo("type", "user")
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    member.name = document.data.get("name").toString()
-                    member.uid = document.data.get("uid").toString()
-//                    temp_user.addAll(listOf(member))
-                    temp_user.add(Friend(member.uid, member.name))
-                }
+        lateinit var friendlist : ArrayList<String>
+        
+        db.collection("users").document(user!!.uid).get()
+            .addOnSuccessListener { 
+                friendlist = it.data!!.get("friends") as ArrayList<String>
+
+                db.collection("users")
+                    .whereEqualTo("type", "user")
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        for (document in documents) {
+                            member.name = document.data.get("name").toString()
+                            member.uid = document.data.get("uid").toString()
+                            if(friendlist.contains(member.uid)){
+                                member.button = "친구 삭제"
+                                println("배열 비교중 1")
+                            }else{
+                                member.button = "친구 추가"
+                                println("배열 비교중 2")
+                            }
+                            println(member.button)
+                            if(!member.uid.equals(user?.uid.toString())) {
+                                temp_user.add(Friend(member.uid, member.name, member.button))
+                            }
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                    }
             }
-            .addOnFailureListener { exception ->
+            .addOnFailureListener {
+
             }
+        
+
         println("tempUser 종료")
         return temp_user
     }

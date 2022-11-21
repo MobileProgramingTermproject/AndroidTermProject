@@ -6,6 +6,6 @@ data class MemberInfo(
     var Phone: String? = null,
     var Birth: String? = null,
     var Email: String? = null,
-    var Friends: List<String>? = null,
+    var Friends: ArrayList<String>? = null,
     val type: String = "user"
 )
