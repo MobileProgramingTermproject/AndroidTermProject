@@ -22,7 +22,6 @@ class AddPostActivity : AppCompatActivity() {
                 val bmp = BitmapFactory.decodeByteArray(it.result,0,it.result!!.size)
                 val imgView = findViewById<ImageView>(R.id.imageView)
                 imgView.setImageBitmap(bmp)
-                finish();
             }
         }
     }

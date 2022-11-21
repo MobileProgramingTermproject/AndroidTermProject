@@ -36,13 +36,9 @@ class StorageActivity : AppCompatActivity() {
 
         storage = Firebase.storage
         val storageRef = storage.reference // reference to root
-        val imageRef1 = storageRef.child("images/computer_sangsangbugi.jpg")
-        val imageRef2 = storage.getReferenceFromUrl(
-            "gs://android-kotlin-lecture.appspot.com/images/computer_sangsangbugi.jpg"
-        )
+        val imageRef1 = storageRef.child("upload_images/background.png")
         // imageRef1 and imageRef2 indicate same object.
         displayImageRef(imageRef1, binding.imageView)
-        displayImageRef(imageRef2, binding.imageView2)
 
         binding.buttonUpload.setOnClickListener {
             uploadDialog()
