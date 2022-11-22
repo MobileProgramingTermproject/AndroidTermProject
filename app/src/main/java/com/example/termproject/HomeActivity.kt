@@ -4,13 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class HomeActivity:AppCompatActivity() {
+    private lateinit var mainAdapter: MainAdapter
+    private lateinit var itemLayout:LinearLayout
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,5 +39,14 @@ class HomeActivity:AppCompatActivity() {
             val intent4 = Intent(this, FriendsActivity::class.java) //intent 생성 this에서 FriendsActivity로 이동
             startActivity(intent4)
         }
+
+        val recyclerView = findViewById<RecyclerView>(R.id.postView)
+
+        recyclerView.layoutManager =  LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        recyclerView.adapter = MainAdapter()
     }
+
+
+    fun
 }
+
