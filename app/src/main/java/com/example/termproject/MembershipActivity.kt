@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class MembershipActivity : AppCompatActivity() {
@@ -36,8 +37,34 @@ class MembershipActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             println("######Sign-up Success")
                             Firebase.auth.signInWithEmailAndPassword(Id.toString()+"@29.com", Password.toString())
-                            val intent = Intent(this, ProfileActivity::class.java) //intent 생성 this에서 homeActivity로 이동
-                            startActivity(intent)
+
+                            val user = Firebase.auth.currentUser
+                            val db = Firebase.firestore
+                            println("######User ${user?.uid}")
+
+                            val Name = findViewById<EditText>(R.id.Name).text.toString()
+                            val Phone = findViewById<EditText>(R.id.PhoneNum).text.toString()
+                            val Birth = findViewById<EditText>(R.id.Birth).text.toString()
+                            val Email = findViewById<EditText>(R.id.Email).text.toString()
+
+                            println("######회원 정보 등록 시도")
+                            println("${Name.length}, ${Phone.length}, ${Birth.length}, ${Email.length}, ")
+                            if(Name.length > 0 && Phone.length > 0 && Birth.length > 0 && Email.length > 0) {
+                                val memberinfo = MemberInfo(user?.uid, Name, Phone, Birth, Email)
+                                println("######회원 정보 등록 시도1")
+                                if (user != null) {
+                                    println("######회원 정보 등록 시도2")
+                                    db.collection("users").document(user.uid).set(memberinfo)
+                                        .addOnSuccessListener {
+                                            println("######회원 정보 등록 성공")
+                                            val intent = Intent(this, HomeActivity::class.java) //intent 생성 this에서 homeActivity로 이동
+                                            startActivity(intent)
+                                        }
+                                        .addOnFailureListener {
+                                            println("######회원 정보 등록 실패")
+                                        }
+                                }
+                            }
                         } else {
                             println("######Sign-up Login Failed ${it.exception?.message}")
                             findViewById<TextView>(R.id.checktextView).setText("Signup failed ${it.exception?.message}")
