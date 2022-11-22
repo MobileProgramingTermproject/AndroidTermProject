@@ -87,13 +87,13 @@ class AddPostActivity : AppCompatActivity() {
                 }, MediaStore.Images.ImageColumns.DISPLAY_NAME).create().show()
         } else {
             requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                StorageActivity.REQUEST_CODE
+                AddPostActivity.REQUEST_CODE
             )
         }
     }
 
     private fun listPhotosDialog() {
-        storage.reference.child(StorageActivity.UPLOAD_FOLDER).listAll()
+        storage.reference.child(AddPostActivity.UPLOAD_FOLDER).listAll()
             .addOnSuccessListener {
                 val itemsString = mutableListOf<String>()
                 for (i in it.items) {
@@ -109,7 +109,7 @@ class AddPostActivity : AppCompatActivity() {
 
     private fun uploadFile(file_id: Long?, fileName: String?) {
         file_id ?: return
-        val imageRef = storage.reference.child("${StorageActivity.UPLOAD_FOLDER}${fileName}")
+        val imageRef = storage.reference.child("${AddPostActivity.UPLOAD_FOLDER}${fileName}")
         val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, file_id)
         imageRef.putFile(contentUri).addOnCompleteListener {
             if (it.isSuccessful) {
@@ -122,7 +122,7 @@ class AddPostActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == StorageActivity.REQUEST_CODE) {
+        if (requestCode == AddPostActivity.REQUEST_CODE) {
             if ((grantResults.isNotEmpty() &&
                         grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 uploadDialog()
