@@ -2,6 +2,7 @@ package com.example.termproject
 
 import android.Manifest
 import android.content.ContentUris
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -42,6 +43,8 @@ class StorageActivity : AppCompatActivity() {
 
         binding.buttonUpload.setOnClickListener {
             uploadDialog()
+            val intent = Intent(this, AddPostActivity::class.java) //intent 생성 this에서 PostingActivity로 이동
+            startActivity(intent)
         }
 
         binding.buttonListUploadedPhotos.setOnClickListener {
@@ -50,8 +53,10 @@ class StorageActivity : AppCompatActivity() {
     }
 
     private fun uploadDialog() {
+        println("111111111111111")
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
             == PackageManager.PERMISSION_GRANTED) {
+            println("22222222222222")
             val cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 null, null, null, null)
 

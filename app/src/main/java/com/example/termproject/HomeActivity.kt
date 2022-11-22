@@ -21,7 +21,7 @@ class HomeActivity:AppCompatActivity() {
             startActivity(intent1)
         }
         findViewById<Button>(R.id.Button_Posting).setOnClickListener {
-            val intent2 = Intent(this, StorageActivity::class.java) //intent 생성 this에서 PostingActivity로 이동
+            val intent2 = Intent(this, AddPostActivity::class.java) //intent 생성 this에서 PostingActivity로 이동
             startActivity(intent2)
         }
 
