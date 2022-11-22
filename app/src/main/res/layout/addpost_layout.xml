@@ -22,7 +22,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="제목"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <LinearLayout
                 android:id="@+id/contentsLayout"
@@ -42,8 +43,8 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="370dp"
+                    android:layout_height="300dp"
                     app:srcCompat="@drawable/ic_launcher_background" />
             </LinearLayout>
 

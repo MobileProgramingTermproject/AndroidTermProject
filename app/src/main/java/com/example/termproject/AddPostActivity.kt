@@ -9,8 +9,12 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ImageView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.termproject.databinding.AddpostLayoutBinding
 
 import com.google.android.material.snackbar.Snackbar
@@ -19,11 +23,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import java.io.File
 
 class AddPostActivity : AppCompatActivity() {
 
     lateinit var storage: FirebaseStorage
     lateinit var binding: AddpostLayoutBinding
+
     companion object {
         const val REQUEST_CODE = 1
         const val UPLOAD_FOLDER = "upload_images/"
@@ -33,9 +39,6 @@ class AddPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //throw RuntimeException("################")
-
-
-
 
         binding = AddpostLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -53,27 +56,52 @@ class AddPostActivity : AppCompatActivity() {
         }
 
         binding.ButtonImage.setOnClickListener {
-            listPhotosDialog()
-            val rootRef = Firebase.storage.reference
 
-            val ref = rootRef.child("sangsangbugi.png")
-            ref.getBytes(Long.MAX_VALUE).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val bmp = BitmapFactory.decodeByteArray(it.result,0,it.result!!.size)
-                    val imgView = findViewById<ImageView>(R.id.imageView)
-                    imgView.setImageBitmap(bmp)
-                }
-            }
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            activityResult.launch(intent)
+
+//            listPhotosDialog()
+//            val rootRef = Firebase.storage.reference
+//
+//            val ref = rootRef.child("sangsangbugi.png")
+//            ref.getBytes(Long.MAX_VALUE).addOnCompleteListener {
+//
+//                if (it.isSuccessful) {
+//                    val bmp = BitmapFactory.decodeByteArray(it.result, 0, it.result!!.size)
+//                    val imgView = findViewById<ImageView>(R.id.imageView)
+//                    imgView.setImageBitmap(bmp)
+//                }
+//            }
         }
     }
+
+    private val activityResult: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        //결과 코드 OK, 결과값 null 아니면
+        if (it.resultCode == RESULT_OK && it.data != null) {
+            val uri = it.data!!.data
+
+            //화면에 보여주기
+            Glide.with(this)
+                .load(uri)
+                .into(binding.imageView) //보여줄 컴포넌트
+        }
+
+    }
+
+
     private fun uploadDialog() {
         println("111111111111111")
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-            == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             println("22222222222222")
             val cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, null, null, null)
+                null, null, null, null
+            )
 
             AlertDialog.Builder(this)
                 .setTitle("Choose Photo")
@@ -86,7 +114,8 @@ class AddPostActivity : AppCompatActivity() {
                     }
                 }, MediaStore.Images.ImageColumns.DISPLAY_NAME).create().show()
         } else {
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 AddPostActivity.REQUEST_CODE
             )
         }
@@ -101,7 +130,7 @@ class AddPostActivity : AppCompatActivity() {
                 }
                 AlertDialog.Builder(this)
                     .setTitle("Uploaded Photos")
-                    .setItems(itemsString.toTypedArray(), {_, i -> }).show()
+                    .setItems(itemsString.toTypedArray(), { _, i -> }).show()
             }.addOnFailureListener {
 
             }
@@ -110,7 +139,8 @@ class AddPostActivity : AppCompatActivity() {
     private fun uploadFile(file_id: Long?, fileName: String?) {
         file_id ?: return
         val imageRef = storage.reference.child("${AddPostActivity.UPLOAD_FOLDER}${fileName}")
-        val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, file_id)
+        val contentUri =
+            ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, file_id)
         imageRef.putFile(contentUri).addOnCompleteListener {
             if (it.isSuccessful) {
                 // upload success
@@ -119,12 +149,15 @@ class AddPostActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == AddPostActivity.REQUEST_CODE) {
             if ((grantResults.isNotEmpty() &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            ) {
                 uploadDialog()
             }
         }
