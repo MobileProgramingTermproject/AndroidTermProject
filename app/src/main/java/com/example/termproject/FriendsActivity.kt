@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FieldValue.arrayUnion
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -33,10 +32,12 @@ class FriendsActivity : AppCompatActivity() {
         setAdapter()
 
     }
+
     var searchViewTextListener: SearchView.OnQueryTextListener =
         object : SearchView.OnQueryTextListener {
             //검색버튼 입력시 호출, 검색버튼이 없으므로 사용하지 않음
             override fun onQueryTextSubmit(s: String): Boolean {
+                searchRecyclerViewAdapter.getFilter().filter(s)
                 return false
             }
 
@@ -46,6 +47,7 @@ class FriendsActivity : AppCompatActivity() {
                 return false
             }
         }
+
     inner class SearchRecyclerViewAdapter(var users: ArrayList<Friend>, var con: Context) :
         RecyclerView.Adapter<SearchRecyclerViewAdapter.ViewHolder>() {
         var filteredUsers = ArrayList<Friend>()
@@ -56,11 +58,11 @@ class FriendsActivity : AppCompatActivity() {
             lateinit var user_uid_list: TextView
             lateinit var user_name_list: TextView
             lateinit var btn: Button
-            
+
             init {
                 user_img_list = itemView.findViewById(R.id.user_img_list)
-                user_uid_list = itemView.findViewById(R.id.user_uid_list)
-                user_name_list = itemView.findViewById(R.id.user_name_list)
+                user_uid_list = itemView.findViewById(R.id.friend_name)
+                user_name_list = itemView.findViewById(R.id.friend_phonenum)
                 btn = itemView.findViewById<Button>(R.id.friend_add)
                 val user = Firebase.auth.currentUser
                 val db = Firebase.firestore
@@ -76,24 +78,71 @@ class FriendsActivity : AppCompatActivity() {
 //                    }
 //                    .addOnFailureListener {
 //                    }
-                
+
                 println("ViewHolder 내용 ${user_name_list}")
+
+//                if(itemView.findViewById<Button>(R.id.friend_add).text.equals("수락 대기")) {
+//                    itemView.findViewById<Button>(R.id.friend_add).isClickable = false
+//                }
+
                 itemView.findViewById<Button>(R.id.friend_add).setOnClickListener {
                     //친구 추가
-                    if(itemView.findViewById<Button>(R.id.friend_add).text.equals("친구 추가")) {
+                    if (itemView.findViewById<Button>(R.id.friend_add).text.equals("친구 추가")) {
                         db.collection("users").document(user!!.uid)
-                            .update("friends", FieldValue.arrayUnion(user_uid_list.text.toString()))
+                            .update(
+                                "requestFriends",
+                                FieldValue.arrayUnion(user_uid_list.text.toString())
+                            )
                             .addOnSuccessListener {
-                                println("${user_name_list.text.toString()} 친구 추가")
-                                itemView.findViewById<Button>(R.id.friend_add).text = "친구 삭제"
+                                println("${user_name_list.text.toString()} 친구 요청")
+                                itemView.findViewById<Button>(R.id.friend_add).text = "수락 대기"
+                                itemView.findViewById<Button>(R.id.friend_add).isClickable = false
                                 users = tempUsers()
                             }
                             .addOnFailureListener {
                                 println("${user_name_list.text.toString()} 친구 추가 실패")
                             }
-                    }else{
+                    } else if (itemView.findViewById<Button>(R.id.friend_add).text.equals("친구 요청")) {
                         db.collection("users").document(user!!.uid)
-                            .update("friends", FieldValue.arrayRemove(user_uid_list.text.toString()))
+                            .update("friends", FieldValue.arrayUnion(user_uid_list.text.toString()))
+                            .addOnSuccessListener {
+                                println("${user_name_list.text.toString()} 친구 수락")
+                                itemView.findViewById<Button>(R.id.friend_add).text = "친구 삭제"
+                                users = tempUsers()
+                            }
+                            .addOnFailureListener {
+                                println("${user_name_list.text.toString()} 친구 수락 실패")
+                            }
+
+                        db.collection("users").document(user!!.uid)
+                            .update(
+                                "requestfriends",
+                                FieldValue.arrayRemove(user_uid_list.text.toString())
+                            )
+                            .addOnSuccessListener {
+                                println("${user_name_list.text.toString()} 친구 수락")
+                            }
+                            .addOnFailureListener {
+                                println("${user_name_list.text.toString()} 친구 수락 실패")
+                            }
+
+                        db.collection("users").document(user_uid_list.text.toString())
+                            .update("friends", FieldValue.arrayUnion(user.uid.toString()))
+                            .addOnSuccessListener {
+                                println("${user_name_list.text.toString()} 친구 수락")
+                            }
+                            .addOnFailureListener {
+                                println("${user_name_list.text.toString()} 친구 수락")
+                            }
+
+                    } else if (itemView.findViewById<Button>(R.id.friend_add).text.equals("수락 대기")) {
+                        itemView.findViewById<Button>(R.id.friend_add).isClickable = false
+                    } else {
+                        db.collection("users").document(user!!.uid)
+                            .update(
+                                "friends",
+                                FieldValue.arrayRemove(user_uid_list.text.toString())
+                            )
                             .addOnSuccessListener {
                                 println("${user_name_list.text.toString()} 친구 삭제")
                                 itemView.findViewById<Button>(R.id.friend_add).text = "친구 추가"
@@ -125,6 +174,8 @@ class FriendsActivity : AppCompatActivity() {
             holder.user_uid_list.text = user.uid
             holder.user_name_list.text = user.name
             holder.btn.text = user.button
+            if (holder.btn.text.equals("수락 대기"))
+                holder.btn.isClickable = false
         }
 
         override fun getItemCount(): Int {
@@ -182,7 +233,7 @@ class FriendsActivity : AppCompatActivity() {
         }
     }
 
-    fun setAdapter(){
+    fun setAdapter() {
         //리사이클러뷰에 리사이클러뷰 어댑터 부착
         println("setAdapter 실행 중")
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -197,39 +248,73 @@ class FriendsActivity : AppCompatActivity() {
         var member = Friend("", "", "")
         val temp_user = ArrayList<Friend>()
 
-        lateinit var friendlist : ArrayList<String>
-        
+        lateinit var friendlist: ArrayList<String>
+        lateinit var friendrequestlist: ArrayList<String>
+        lateinit var requestlist: ArrayList<String>
+
         db.collection("users").document(user!!.uid).get()
-            .addOnSuccessListener { 
-                friendlist = it.data!!.get("friends") as ArrayList<String>
+            .addOnSuccessListener {
+                if (it.data != null) {
+                    if (it.data!!.get("friends") != null)
+                        friendlist = it.data!!.get("friends") as ArrayList<String>
+                    else
+                        friendlist = ArrayList<String>()
+                }
+                if (it.data != null) {
+                    if (it.data!!.get("requestFriends") != null)
+                        friendrequestlist = it.data!!.get("requestFriends") as ArrayList<String>
+                    else
+                        friendrequestlist = ArrayList<String>()
+                }
+//                friendlist = it.data.get("friends") as ArrayList<String>
+//                friendrequestlist = it.data.get("requestFriends") as ArrayList<String>
+
 
                 db.collection("users")
                     .whereEqualTo("type", "user")
                     .get()
                     .addOnSuccessListener { documents ->
                         for (document in documents) {
+                            if (document.get("requestFriends") != null) {
+                                requestlist = document.get("requestFriends") as ArrayList<String>
+                                println("${document} 친구 요청 체크리스트")
+                            } else
+                                requestlist = ArrayList<String>()
+
                             member.name = document.data.get("name").toString()
                             member.uid = document.data.get("uid").toString()
-                            if(friendlist.contains(member.uid)){
+                            if (requestlist.contains(user.uid.toString())) {
+                                member.button = "친구 요청"
+                                println("배열 비교중 4")
+                            } else if (friendrequestlist.contains(member.uid)) {
+                                member.button = "수락 대기"
+                                println("배열 비교중 3")
+                            } else if (friendlist.contains(member.uid)) {
                                 member.button = "친구 삭제"
-                                println("배열 비교중 1")
-                            }else{
+                                println("배열 비교중 2")
+                            } else {
                                 member.button = "친구 추가"
+                                println("배열 비교중 1")
+                            }
+                            if (friendlist.contains(member.uid)) {
+                                member.button = "친구 삭제"
                                 println("배열 비교중 2")
                             }
+
                             println(member.button)
-                            if(!member.uid.equals(user?.uid.toString())) {
+                            if (!member.uid.equals(user?.uid.toString())) {
                                 temp_user.add(Friend(member.uid, member.name, member.button))
                             }
                         }
                     }
                     .addOnFailureListener { exception ->
                     }
+
             }
             .addOnFailureListener {
 
             }
-        
+
 
         println("tempUser 종료")
         return temp_user

@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.remote.Datastore
 import com.google.firebase.ktx.Firebase
+import java.sql.Struct
 
 class ProfileActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -23,9 +24,9 @@ class ProfileActivity : AppCompatActivity() {
         val user = Firebase.auth.currentUser
         val db = Firebase.firestore
         var member = MemberInfo()
-        if(user == null){
+        if (user == null) {
             println("######User 없음")
-        }else {
+        } else {
             val usersdb = db.collection("users").document(user.uid)
             println("######User ${user.uid}")
             usersdb.get()
@@ -35,11 +36,25 @@ class ProfileActivity : AppCompatActivity() {
                         member.Phone = document.data?.get("phone").toString()
                         member.Birth = document.data?.get("birth").toString()
                         member.Email = document.data?.get("email").toString()
+                        if (document.data != null) {
+                            if (document.data!!.get("friends") != null)
+                                member.Friends = document.data!!.get("friends") as ArrayList<String>
+                            else
+                                member.Friends = ArrayList<String>()
+                        }
+
+                        if (document.data != null) {
+                            if (document.data!!.get("requestFriends") != null)
+                                member.requestFriends = document.data!!.get("requestFriends") as ArrayList<String>
+                            else
+                                member.requestFriends = ArrayList<String>()
+                        }
+
                         println("######DB 읽음")
-                            findViewById<EditText>(R.id.Name_Profile).setText(member.Name)
-                            findViewById<EditText>(R.id.Phone_Profile).setText(member.Phone)
-                            findViewById<EditText>(R.id.Birthday_Profile).setText(member.Birth)
-                            findViewById<EditText>(R.id.Email_Profile).setText(member.Email)
+                        findViewById<EditText>(R.id.Name_Profile).setText(member.Name)
+                        findViewById<EditText>(R.id.Phone_Profile).setText(member.Phone)
+                        findViewById<EditText>(R.id.Birthday_Profile).setText(member.Birth)
+                        findViewById<EditText>(R.id.Email_Profile).setText(member.Email)
                     } else {
                         println("######DB 없음")
                     }
@@ -59,8 +74,8 @@ class ProfileActivity : AppCompatActivity() {
 
             println("######회원 정보 등록 시도")
             println("${Name.length}, ${Phone.length}, ${Birth.length}, ${Email.length}, ")
-            if(Name.length > 0 && Phone.length > 0 && Birth.length > 0 && Email.length > 0) {
-                val memberinfo = MemberInfo(user?.uid, Name, Phone, Birth, Email)
+            if (Name.length > 0 && Phone.length > 0 && Birth.length > 0 && Email.length > 0) {
+                val memberinfo = MemberInfo(user?.uid, Name, Phone, Birth, Email, member.Friends, member.requestFriends)
                 println("######회원 정보 등록 시도1")
                 if (user != null) {
                     println("######회원 정보 등록 시도2")

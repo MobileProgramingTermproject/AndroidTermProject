@@ -28,7 +28,7 @@
         android:id="@+id/Button_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile"
+        android:text="내 정보"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
@@ -46,8 +46,9 @@
         android:id="@+id/Button_Friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Friends"
+        android:text="친구 추가"
         app:layout_constraintEnd_toStartOf="@+id/Button_Posting"
+        app:layout_constraintHorizontal_bias="0.891"
         app:layout_constraintStart_toEndOf="@+id/Button_Profile"
         app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
@@ -59,5 +60,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Button_Friends" />
+
+    <Button
+        android:id="@+id/Button_friendslist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="친구목록"
+        app:layout_constraintEnd_toStartOf="@+id/Button_Friends"
+        app:layout_constraintStart_toEndOf="@+id/Button_Profile"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

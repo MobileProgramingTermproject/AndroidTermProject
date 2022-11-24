@@ -11,4 +11,4 @@ data class PostInfo (
     var uid: String,
     var image: String?,
     var name:String
-)g
+)

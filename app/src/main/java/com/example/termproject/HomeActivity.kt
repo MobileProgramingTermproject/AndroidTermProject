@@ -40,13 +40,16 @@ class HomeActivity:AppCompatActivity() {
             startActivity(intent4)
         }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.postView)
+        findViewById<Button>(R.id.Button_friendslist).setOnClickListener {
+            val intent = Intent(this, FriendsListActivity::class.java) //intent 생성 this에서 FriendsActivity로 이동
+            startActivity(intent)
+        }
 
-        recyclerView.layoutManager =  LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-        recyclerView.adapter = MainAdapter()
+//        val recyclerView = findViewById<RecyclerView>(R.id.postView)
+//
+//        recyclerView.layoutManager =  LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+//        recyclerView.adapter = MainAdapter()
     }
 
-
-    fun
 }
 
