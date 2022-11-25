@@ -17,22 +17,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/Button_Posting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Posting"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
-
-    <Button
-        android:id="@+id/Button_Profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="내 정보"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
-
-    <Button
         android:id="@+id/Button_Logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,32 +26,65 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/Button_Friends"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="친구 추가"
-        app:layout_constraintEnd_toStartOf="@+id/Button_Posting"
-        app:layout_constraintHorizontal_bias="0.891"
-        app:layout_constraintStart_toEndOf="@+id/Button_Profile"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2"
+        tools:layout_editor_absoluteX="1dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postView"
-        android:layout_width="409dp"
-        android:layout_height="569dp"
-        app:layout_constraintBottom_toTopOf="@+id/Button_Logout"
+        <Button
+            android:id="@+id/Button_Profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내 정보"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Button_friendslist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="친구목록"
+            app:layout_constraintStart_toEndOf="@+id/Button_Profile"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Button_Friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="친구 추가"
+            app:layout_constraintStart_toEndOf="@+id/Button_friendslist"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Button_Posting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Posting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/Button_Friends"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="572dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Button_Friends" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_bias="0.009">
 
-    <Button
-        android:id="@+id/Button_friendslist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="친구목록"
-        app:layout_constraintEnd_toStartOf="@+id/Button_Friends"
-        app:layout_constraintStart_toEndOf="@+id/Button_Profile"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/postView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

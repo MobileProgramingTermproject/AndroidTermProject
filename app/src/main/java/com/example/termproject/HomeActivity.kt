@@ -9,15 +9,20 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sns_project.PostInfo
+import com.example.termproject.databinding.ActivityFriendsListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class HomeActivity:AppCompatActivity() {
-    private lateinit var mainAdapter: MainAdapter
-    private lateinit var itemLayout:LinearLayout
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    val user = Firebase.auth.currentUser
+    val db = Firebase.firestore
+
+        @SuppressLint("MissingInflatedId")
+        override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_layout) //login_layout 열기
 
@@ -45,11 +50,45 @@ class HomeActivity:AppCompatActivity() {
             startActivity(intent)
         }
 
-//        val recyclerView = findViewById<RecyclerView>(R.id.postView)
-//
-//        recyclerView.layoutManager =  LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-//        recyclerView.adapter = MainAdapter()
+            setRecyclerView()
+
     }
 
+
+    private fun setRecyclerView() {
+
+
+        val postArray: ArrayList<PostInfo> = arrayListOf<PostInfo>()
+
+        val docRef = db.collection("post").orderBy("createdAt").get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+
+                    postArray.add(
+                        PostInfo(
+                            document.data.get("title") as String,
+                            document.data.get("text") as String,
+                            document.data.get("createdAt") as String,
+                            document.data.get("uid") as String,
+                            document.data.get("image") as String,
+                            document.data.get("name") as String
+                        )
+                    )
+                    val recyclerView = findViewById<RecyclerView>(R.id.postView)
+                    val mainAdapter = MainAdapter(this, postArray)
+                    recyclerView.adapter = mainAdapter
+
+                    val layout = LinearLayoutManager(this)
+                    recyclerView.layoutManager = layout
+                    recyclerView.setHasFixedSize(true)
+                }
+
+            }
+            .addOnFailureListener { exception ->
+                println(exception)
+            }
+
+    }
 }
+
 
