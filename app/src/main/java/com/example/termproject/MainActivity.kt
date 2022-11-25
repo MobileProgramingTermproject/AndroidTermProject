@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() { //로그인
             val intent = Intent(this, MembershipActivity::class.java) //intent 생성 this에서 MembershipActivity로 이동
             startActivity(intent)
         }
+
+
         
 
 

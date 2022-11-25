@@ -31,17 +31,17 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/editText2"
+                    android:id="@+id/text_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:gravity="start|top"
                     android:hint="내용"
                     android:inputType="textMultiLine"
-                    android:lines="10" />
+                    android:lines="5" />
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/image_iv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_launcher_background" />
@@ -59,16 +59,10 @@
                     android:layout_weight="1"
                     android:text="이미지" />
 
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="동영상" />
             </LinearLayout>
 
             <Button
-                android:id="@+id/Button_Upload"
+                android:id="@+id/upload_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="UPLOAD" />
