@@ -13,8 +13,12 @@ import android.provider.MediaStore
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.termproject.databinding.AddpostLayoutBinding
 
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +31,7 @@ import com.google.firebase.storage.ktx.storage
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class AddPostActivity : AppCompatActivity() {
     lateinit var imageIv: ImageView
     lateinit var textEt: EditText
@@ -36,8 +41,14 @@ class AddPostActivity : AppCompatActivity() {
     var IMAGE_PICK = 1111
     var selectImage: Uri? = null
 
-    lateinit var storage:FirebaseStorage
+    lateinit var storage: FirebaseStorage
     lateinit var firestore: FirebaseFirestore
+    lateinit var binding: AddpostLayoutBinding
+
+    companion object {
+        const val REQUEST_CODE = 1
+        const val UPLOAD_FOLDER = "upload_images/"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +74,7 @@ class AddPostActivity : AppCompatActivity() {
                 storage.getReference().child("image").child(fileName)
                     .putFile(selectImage!!) //어디에 업로드할지 지정
                     .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
-                        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener {
-                                it ->
+                        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
                             var imageUrl = it.toString()
                             var photo = Photo(textEt.text.toString(), imageUrl)
                             firestore.collection("photo")
@@ -77,14 +87,17 @@ class AddPostActivity : AppCompatActivity() {
             }
         }
     }
-    override fun onActivityResult(requestCode: Int,resultCode: Int, data:Intent?){
-        super.onActivityResult(requestCode, resultCode,data)
-        if(requestCode==IMAGE_PICK&&resultCode== Activity.RESULT_OK){
-            selectImage=data?.data
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            selectImage = data?.data
             imageIv.setImageURI(selectImage)
+
         }
     }
 }
+
 
 
 //    lateinit var storage: FirebaseStorage

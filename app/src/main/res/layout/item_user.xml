@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/user_uid_list"
+            android:id="@+id/friend_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -34,7 +34,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/user_name_list"
+            android:id="@+id/friend_phonenum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center|left"

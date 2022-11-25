@@ -4,34 +4,27 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.SearchView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sns_project.PostInfo
+import com.example.termproject.databinding.ActivityFriendsListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class HomeActivity:AppCompatActivity(),PhotoAdapter.OnItemClickListener {
+class HomeActivity:AppCompatActivity() {
+    val user = Firebase.auth.currentUser
+    val db = Firebase.firestore
 
-    lateinit var email: TextView
-    lateinit var auth:FirebaseAuth
-
-    lateinit var addPhotoBtn: Button
-    lateinit var listRv: RecyclerView
-
-    lateinit var photoAdapter:PhotoAdapter
-    lateinit var photoList:ArrayList<Photo>
-
-    lateinit var firestore: FirebaseFirestore
-
-//    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_layout)
+        setContentView(R.layout.main_layout) //login_layout 열기
 
         findViewById<Button>(R.id.Button_Profile).setOnClickListener {
             val intent1 = Intent(this, ProfileActivity::class.java) //intent 생성 this에서 ProfileActivity로 이동
@@ -52,55 +45,49 @@ class HomeActivity:AppCompatActivity(),PhotoAdapter.OnItemClickListener {
             startActivity(intent4)
         }
 
-        auth = FirebaseAuth.getInstance()
-
-        email = findViewById(R.id.email_tv)
-        email.text = auth.currentUser?.email
-
-        firestore = FirebaseFirestore.getInstance()
-
-        addPhotoBtn=findViewById(R.id.add_photo_btn)
-        listRv=findViewById(R.id.list_rv)
-
-        photoList= ArrayList()
-        photoAdapter=PhotoAdapter(this,photoList)
-
-        listRv.layoutManager= GridLayoutManager(this, 3)
-        listRv.adapter=photoAdapter
-
-        photoAdapter.onItemClickListener=this
-
-        firestore.collection("photo").addSnapshotListener {
-                querySnapshot, FirebaseFIrestoreException ->
-            if(querySnapshot!=null){
-                for(dc in querySnapshot.documentChanges){
-                    if(dc.type== DocumentChange.Type.ADDED){
-                        var photo=dc.document.toObject(Photo::class.java)
-                        photo.id=dc.document.id
-                        photoList.add(photo)
-                    }
-                }
-                photoAdapter.notifyDataSetChanged()
-            }
-        }
-
-        addPhotoBtn.setOnClickListener {
-            var intent= Intent(this,AddPostActivity::class.java)
+        findViewById<Button>(R.id.Button_friendslist).setOnClickListener {
+            val intent = Intent(this, FriendsListActivity::class.java) //intent 생성 this에서 FriendsActivity로 이동
             startActivity(intent)
         }
 
+        setRecyclerView()
 
     }
 
-    override fun onItemClick(photo: Photo) {
-        var intent=Intent(this,PhotoActivity::class.java)
-        intent.putExtra("id",photo.id)
-        startActivity(intent)
+
+    private fun setRecyclerView() {
+
+
+        val postArray: ArrayList<PostInfo> = arrayListOf<PostInfo>()
+
+        val docRef = db.collection("post").orderBy("createdAt").get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+
+                    postArray.add(
+                        PostInfo(
+                            document.data.get("title") as String,
+                            document.data.get("text") as String,
+                            document.data.get("createdAt") as String,
+                            document.data.get("uid") as String,
+                            document.data.get("image") as String,
+                            document.data.get("name") as String
+                        )
+                    )
+                    val recyclerView = findViewById<RecyclerView>(R.id.postView)
+                    val mainAdapter = MainAdapter(this, postArray)
+                    recyclerView.adapter = mainAdapter
+
+                    val layout = LinearLayoutManager(this)
+                    recyclerView.layoutManager = layout
+                    recyclerView.setHasFixedSize(true)
+                }
+
+            }
+            .addOnFailureListener { exception ->
+                println(exception)
+            }
+
     }
-
-
-
-
-
-
 }
+
