@@ -7,6 +7,20 @@
     android:background="#191C1E"
     tools:context=".HomeActivity">
 
+    <Button
+        android:id="@+id/Sync"
+        android:layout_width="25dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:drawable/ic_popup_sync"
+        android:textAlignment="textStart"
+        android:textColor="#FBFBFB"
+        android:textSize="8sp"
+        app:layout_constraintStart_toEndOf="@+id/MyName"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
     <TextView
         android:id="@+id/MyName"
         android:layout_width="wrap_content"
@@ -15,6 +29,7 @@
         android:text="TextView"
         android:textColor="#FBFBFB"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.39"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,6 +50,7 @@
             android:layout_height="match_parent"
             android:background="#191C1E"
             android:backgroundTint="#191C1E" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

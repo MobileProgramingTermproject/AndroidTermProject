@@ -2,6 +2,7 @@ package com.example.watch_termproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
         var actionbar : ActionBar
         actionbar = supportActionBar!!
         actionbar.hide()
@@ -26,6 +28,10 @@ class HomeActivity : AppCompatActivity() {
             }
 
         setRecyclerView()
+
+        findViewById<Button>(R.id.Sync).setOnClickListener {
+            setRecyclerView()
+        }
 
     }
 
