@@ -57,6 +57,9 @@ class HomeActivity:AppCompatActivity() {
 
         setRecyclerView()
 
+        findViewById<Button>(R.id.button_Sync).setOnClickListener {
+            setRecyclerView()
+        }
     }
 
 
