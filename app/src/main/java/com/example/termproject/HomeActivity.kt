@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sns_project.PostInfo
 import com.example.termproject.databinding.ActivityFriendsListBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class HomeActivity:AppCompatActivity() {
     val user = Firebase.auth.currentUser
-    val db = Firebase.firestore
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,34 +59,42 @@ class HomeActivity:AppCompatActivity() {
 
 
         val postArray: ArrayList<PostInfo> = arrayListOf<PostInfo>()
+        var friends: ArrayList<String> = arrayListOf<String>()
 
-        val docRef = db.collection("post").orderBy("createdAt").get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
+        Firebase.firestore.collection("users").document(user!!.uid).get()
+            .addOnSuccessListener{ document ->
+                println(document.data?.get("friends"))
+                friends.add(user!!.uid)
 
-                    postArray.add(
-                        PostInfo(
-                            document.data.get("title") as String,
-                            document.data.get("text") as String,
-                            document.data.get("date") as String,
-                            document.data.get("uid") as String,
-                            document.data.get("image") as String,
-                            document.data.get("name") as String
-                        )
-                    )
-                    val recyclerView = findViewById<RecyclerView>(R.id.postView)
-                    val mainAdapter = MainAdapter(this, postArray)
-                    recyclerView.adapter = mainAdapter
+                Firebase.firestore.collection("post").orderBy("date").get()
+                    .addOnSuccessListener { result ->
+                        for (document in result) {
+                            postArray.add(
+                                PostInfo(
+                                    document.data.get("title") as String,
+                                    document.data.get("text") as String,
+                                    document.data.get("date") as String,
+                                    document.data.get("uid") as String,
+                                    document.data.get("image") as String,
+                                    document.data.get("name") as String
+                                )
+                            )
+                            val recyclerView = findViewById<RecyclerView>(R.id.postView)
+                            val mainAdapter = MainAdapter(this, postArray)
+                            recyclerView.adapter = mainAdapter
 
-                    val layout = LinearLayoutManager(this)
-                    recyclerView.layoutManager = layout
-                    recyclerView.setHasFixedSize(true)
-                }
+                            val layout = LinearLayoutManager(this)
+                            recyclerView.layoutManager = layout
+                            recyclerView.setHasFixedSize(true)
+                        }
 
+                    }
+                    .addOnFailureListener { exception ->
+                        println(exception)
+                    }
             }
-            .addOnFailureListener { exception ->
-                println(exception)
-            }
+
+
 
     }
 }
