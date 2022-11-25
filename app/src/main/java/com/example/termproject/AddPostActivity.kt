@@ -31,6 +31,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 
@@ -95,7 +96,7 @@ class AddPostActivity : AppCompatActivity() {
                             if(it != null) {
                                 imageUrl = it.toString()
                             }
-                            var post = PostInfo(title.text.toString(),textEt.text.toString(), Date().toString(), uid, imageUrl, name)
+                            var post = PostInfo(title.text.toString(),textEt.text.toString(), LocalDate.now().toString(), uid, imageUrl, name)
                             firestore.collection("post")
                                 .document().set(post)
                                 .addOnSuccessListener {

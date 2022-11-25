@@ -14,6 +14,7 @@ import com.example.termproject.databinding.ActivityFriendsListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -63,22 +64,24 @@ class HomeActivity:AppCompatActivity() {
 
         Firebase.firestore.collection("users").document(user!!.uid).get()
             .addOnSuccessListener{ document ->
-                println(document.data?.get("friends"))
+                friends = document.data?.get("friends") as ArrayList<String>
                 friends.add(user!!.uid)
 
-                Firebase.firestore.collection("post").orderBy("date").get()
+                Firebase.firestore.collection("post").orderBy("date", Query.Direction.DESCENDING).get()
                     .addOnSuccessListener { result ->
                         for (document in result) {
-                            postArray.add(
-                                PostInfo(
-                                    document.data.get("title") as String,
-                                    document.data.get("text") as String,
-                                    document.data.get("date") as String,
-                                    document.data.get("uid") as String,
-                                    document.data.get("image") as String,
-                                    document.data.get("name") as String
+                            if (friends.contains(document.data.get("uid"))) {
+                                postArray.add(
+                                    PostInfo(
+                                        document.data.get("title") as String,
+                                        document.data.get("text") as String,
+                                        document.data.get("date") as String,
+                                        document.data.get("uid") as String,
+                                        document.data.get("image") as String,
+                                        document.data.get("name") as String
+                                    )
                                 )
-                            )
+                            }
                             val recyclerView = findViewById<RecyclerView>(R.id.postView)
                             val mainAdapter = MainAdapter(this, postArray)
                             recyclerView.adapter = mainAdapter
@@ -86,7 +89,7 @@ class HomeActivity:AppCompatActivity() {
                             val layout = LinearLayoutManager(this)
                             recyclerView.layoutManager = layout
                             recyclerView.setHasFixedSize(true)
-                        }
+                            }
 
                     }
                     .addOnFailureListener { exception ->
@@ -96,6 +99,11 @@ class HomeActivity:AppCompatActivity() {
 
 
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setRecyclerView()
     }
 }
 
