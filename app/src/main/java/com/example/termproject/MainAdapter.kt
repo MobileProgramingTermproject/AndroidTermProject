@@ -64,8 +64,6 @@ class MainAdapter(private val context : Context, private val items:ArrayList<Pos
             }
 
         }
-
-
     }
 }
 
