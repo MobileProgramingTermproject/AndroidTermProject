@@ -105,5 +105,11 @@ class HomeActivity:AppCompatActivity() {
         super.onStart()
         setRecyclerView()
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        println("뒤로가기")
+        System.exit(0)
+    }
 }
 
