@@ -306,6 +306,7 @@ class FriendsActivity : AppCompatActivity() {
                                 temp_user.add(Friend(member.uid, member.name, member.button))
                             }
                         }
+                        setAdapter()
                     }
                     .addOnFailureListener { exception ->
                     }
