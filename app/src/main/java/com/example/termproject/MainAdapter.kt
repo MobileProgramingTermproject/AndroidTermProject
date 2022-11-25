@@ -50,7 +50,7 @@ class MainAdapter(private val context : Context, private val items:ArrayList<Pos
 
             }
             else{
-                var param = postimage.layoutParams
+                val param = postimage.layoutParams
                 param.height = 0
                 postimage.setLayoutParams(param)
             }
