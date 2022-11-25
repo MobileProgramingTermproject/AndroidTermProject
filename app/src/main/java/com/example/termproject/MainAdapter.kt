@@ -11,12 +11,15 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sns_project.PostInfo
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 class MainAdapter(private val context : Context, private val items:ArrayList<PostInfo>) : RecyclerView.Adapter<MainAdapter.ItemViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_post,parent,false)
-        println("itmesize           " + items.size)
         return ItemViewHolder(view)
     }
     override fun getItemCount() : Int{
@@ -29,29 +32,48 @@ class MainAdapter(private val context : Context, private val items:ArrayList<Pos
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var v : View= view
-
         private val username: TextView = itemView.findViewById(R.id.post_username)
         private val contents: TextView = itemView.findViewById(R.id.post_contents)
         private val createdAt: TextView = itemView.findViewById(R.id.post_createdAt)
         private val postimage: ImageView = itemView.findViewById(R.id.post_img)
         private val posttiltle: TextView = itemView.findViewById((R.id.post_title))
+
         fun bind(item:PostInfo, context: Context) {
-                username.text = item.name
-                contents.text = item.text
-                createdAt.text = item.text
-                posttiltle.text = item.title
-                if(item.image != ""){
+
+            if(item.image != "") {
+                val img =
+                    Firebase.storage.reference.child(item.image as String).downloadUrl.addOnSuccessListener() { uri ->
+                        Glide.with(context.applicationContext)
+                            .load(uri)
+                            .into(postimage)
+                    }.addOnFailureListener {
+
+                    }
+            }
+            else{
+                Firebase.storage.reference.child("image/White.png").downloadUrl.addOnSuccessListener() { uri ->
+                    Glide.with(context.applicationContext)
+                        .load(uri)
+                        .into(postimage);
+                    println("sucess")
+                }.addOnFailureListener {
 
                 }
-                else{
+            }
+            username.text = item.name
+            contents.text = item.text
+            createdAt.text = item.createdAt as String
+            posttiltle.text = item.title
 
-                }
-
-                v.setOnClickListener {
-                    Toast.makeText(it.context, "Clicked", Toast.LENGTH_SHORT).show()
-                }
+            v.setOnClickListener {
+                Toast.makeText(it.context, "Clicked", Toast.LENGTH_SHORT).show()
+            }
 
         }
+
+
     }
 }
+
+
 
