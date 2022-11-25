@@ -41,14 +41,12 @@ class MainAdapter(private val context : Context, private val items:ArrayList<Pos
         fun bind(item:PostInfo, context: Context) {
 
             if(item.image != "") {
-                val img =
-                    Firebase.storage.reference.child(item.image as String).downloadUrl.addOnSuccessListener() { uri ->
-                        Glide.with(context.applicationContext)
-                            .load(uri)
-                            .into(postimage)
-                    }.addOnFailureListener {
+                println(item.image)
 
-                    }
+                        Glide.with(context.applicationContext)
+                            .load(item.image)
+                            .into(postimage)
+
             }
             else{
                 Firebase.storage.reference.child("image/White.png").downloadUrl.addOnSuccessListener() { uri ->
