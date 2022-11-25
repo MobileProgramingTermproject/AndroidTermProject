@@ -68,7 +68,7 @@ class HomeActivity:AppCompatActivity() {
                         PostInfo(
                             document.data.get("title") as String,
                             document.data.get("text") as String,
-                            document.data.get("createdAt") as String,
+                            document.data.get("date") as String,
                             document.data.get("uid") as String,
                             document.data.get("image") as String,
                             document.data.get("name") as String
