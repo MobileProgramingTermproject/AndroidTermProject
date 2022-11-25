@@ -106,7 +106,7 @@ class AddPostActivity : AppCompatActivity() {
                         }
                     }
             }else {
-                var post = PostInfo(title.text.toString(),textEt.text.toString(), Date().toString(), uid, imageUrl, name)
+                var post = PostInfo(title.text.toString(),textEt.text.toString(), LocalDateTime.now().toString(), uid, imageUrl, name)
                 firestore.collection("post")
                     .document().set(post)
                     .addOnSuccessListener {

@@ -56,7 +56,7 @@ class MainAdapter(private val context : Context, private val items:ArrayList<Pos
             }
             username.text = item.name
             contents.text = item.text
-            createdAt.text = item.Date
+            createdAt.text = item.Date.substring(0, item.Date.length - 4)
             posttiltle.text = item.title
 
             v.setOnClickListener {
