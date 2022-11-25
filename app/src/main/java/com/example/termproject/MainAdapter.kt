@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -49,14 +50,9 @@ class MainAdapter(private val context : Context, private val items:ArrayList<Pos
 
             }
             else{
-                Firebase.storage.reference.child("image/White.png").downloadUrl.addOnSuccessListener() { uri ->
-                    Glide.with(context.applicationContext)
-                        .load(uri)
-                        .into(postimage);
-                    println("sucess")
-                }.addOnFailureListener {
-
-                }
+                var param = postimage.layoutParams
+                param.height = 0
+                postimage.setLayoutParams(param)
             }
             username.text = item.name
             contents.text = item.text

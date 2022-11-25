@@ -37,9 +37,7 @@
         android:id="@+id/post_img"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_gravity="center"
-        android:src="@android:drawable/sym_def_app_icon"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/post_contents"
