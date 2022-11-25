@@ -71,9 +71,7 @@
         <activity
             android:name=".HomeActivity"
             android:exported="true" />
-        <activity android:name=".PhotoActivity" />
-        <activity android:name=".PhotoAdapter"/>
-        <activity android:name=".Photo" />
+
     </application>
 
 </manifest>

@@ -1,9 +1,11 @@
+
 buildscript {
     ext {
         compose_version = '1.2.0-alpha05'
         wear_compose_version = '1.0.0-alpha18'
     }
 }
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -12,17 +14,16 @@ plugins {
 }
 
 android {
-    namespace 'com.example.termproject'
+    namespace 'com.example.watch_termproject'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.termproject"
-        minSdk 27
+        applicationId "com.example.watch_termproject"
+        minSdk 30
         targetSdk 33
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -31,14 +32,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
     buildscript{ //Firebase Crashlytics - 앱이 비정상 종료되었을 때 예외 로그를 Firebase에 남기고 확인할 수 있게 해줌
         repositories{
             google()
@@ -50,7 +43,6 @@ android {
 
         }
     }
-
     buildFeatures {
         viewBinding = true
     }
@@ -58,37 +50,19 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'com.google.android.gms:play-services-wearable:18.0.0'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.firebase:firebase-common-ktx:20.2.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.1'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
     implementation platform('com.google.firebase:firebase-bom:31.1.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
-    implementation 'com.google.firebase:firebase-config-ktx:21.2.0'
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
-
-
 }
-
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '7.0'
-}
-
-tasks.register("prepareKotlinBuildScriptModel"){}
-
-
