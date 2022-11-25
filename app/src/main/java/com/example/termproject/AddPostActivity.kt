@@ -19,11 +19,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.sns_project.PostInfo
 import com.example.termproject.databinding.AddpostLayoutBinding
 
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -33,10 +35,13 @@ import java.util.*
 
 
 class AddPostActivity : AppCompatActivity() {
+    lateinit var title: EditText
     lateinit var imageIv: ImageView
     lateinit var textEt: EditText
     lateinit var uploadBtn: Button
     lateinit var buttonImage: Button
+    lateinit var name: String
+    lateinit var uid: String
 
     var IMAGE_PICK = 1111
     var selectImage: Uri? = null
@@ -54,13 +59,25 @@ class AddPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.addpost_layout)
 
+        val user = Firebase.auth.currentUser
+        val db = Firebase.firestore
+
+        db.collection("users").document(user!!.uid).get()
+            .addOnSuccessListener {
+                name = it.data?.get("name").toString()
+                uid = it.data?.get("uid").toString()
+            }
+
+
         storage = FirebaseStorage.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
+        title = findViewById(R.id.Title)
         buttonImage = findViewById(R.id.Button_Image)
         imageIv = findViewById(R.id.image_iv)
         textEt = findViewById(R.id.text_et)
         uploadBtn = findViewById(R.id.upload_btn)
+        var imageUrl = String()
 
         buttonImage.setOnClickListener {
             var intent = Intent(Intent.ACTION_PICK) //선택하면 무엇인가 띄운다.
@@ -75,14 +92,23 @@ class AddPostActivity : AppCompatActivity() {
                     .putFile(selectImage!!) //어디에 업로드할지 지정
                     .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
                         taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
-                            var imageUrl = it.toString()
-                            var photo = Photo(textEt.text.toString(), imageUrl)
-                            firestore.collection("photo")
-                                .document().set(photo)
+                            if(it != null) {
+                                imageUrl = it.toString()
+                            }
+                            var post = PostInfo(title.text.toString(),textEt.text.toString(), Date().toString(), uid, imageUrl, name)
+                            firestore.collection("post")
+                                .document().set(post)
                                 .addOnSuccessListener {
                                     finish()
                                 }
                         }
+                    }
+            }else {
+                var post = PostInfo(title.text.toString(),textEt.text.toString(), Date().toString(), uid, imageUrl, name)
+                firestore.collection("post")
+                    .document().set(post)
+                    .addOnSuccessListener {
+                        finish()
                     }
             }
         }

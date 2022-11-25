@@ -7,8 +7,8 @@ import kotlin.collections.ArrayList
 data class PostInfo (
     var title: String,
     var text: String,
-    var Date: String,
+    var Date: String = Date().toString(),
     var uid: String,
-    var image: String?,
+    var image: String?=null,
     var name:String,
 )
