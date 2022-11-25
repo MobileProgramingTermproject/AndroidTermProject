@@ -55,14 +55,15 @@ class FriendsActivity : AppCompatActivity() {
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             lateinit var user_img_list: ImageView
-            lateinit var user_uid_list: TextView
+            lateinit var user_uid_list: String
+            lateinit var user_phone_list: TextView
             lateinit var user_name_list: TextView
             lateinit var btn: Button
 
             init {
                 user_img_list = itemView.findViewById(R.id.user_img_list)
-                user_uid_list = itemView.findViewById(R.id.friend_name)
-                user_name_list = itemView.findViewById(R.id.friend_phonenum)
+                user_phone_list = itemView.findViewById(R.id.friend_phonenum)
+                user_name_list = itemView.findViewById(R.id.friend_name)
                 btn = itemView.findViewById<Button>(R.id.friend_add)
                 val user = Firebase.auth.currentUser
                 val db = Firebase.firestore
@@ -91,33 +92,33 @@ class FriendsActivity : AppCompatActivity() {
                         db.collection("users").document(user!!.uid)
                             .update(
                                 "requestFriends",
-                                FieldValue.arrayUnion(user_uid_list.text.toString())
+                                FieldValue.arrayUnion(user_uid_list)
                             )
                             .addOnSuccessListener {
-                                println("${user_name_list.text.toString()} 친구 요청")
+                                println("${user_name_list.text.toString()} 친구 요청 수락대기 수락대기 수락대기")
                                 itemView.findViewById<Button>(R.id.friend_add).text = "수락 대기"
                                 itemView.findViewById<Button>(R.id.friend_add).isClickable = false
-                                users = tempUsers()
+//                                users = tempUsers()
                             }
                             .addOnFailureListener {
                                 println("${user_name_list.text.toString()} 친구 추가 실패")
                             }
                     } else if (itemView.findViewById<Button>(R.id.friend_add).text.equals("친구 요청")) {
                         db.collection("users").document(user!!.uid)
-                            .update("friends", FieldValue.arrayUnion(user_uid_list.text.toString()))
+                            .update("friends", FieldValue.arrayUnion(user_uid_list))
                             .addOnSuccessListener {
                                 println("${user_name_list.text.toString()} 친구 수락")
                                 itemView.findViewById<Button>(R.id.friend_add).text = "친구 삭제"
-                                users = tempUsers()
+//                                users = tempUsers()
                             }
                             .addOnFailureListener {
                                 println("${user_name_list.text.toString()} 친구 수락 실패")
                             }
 
-                        db.collection("users").document(user!!.uid)
+                        db.collection("users").document(user_uid_list)
                             .update(
-                                "requestfriends",
-                                FieldValue.arrayRemove(user_uid_list.text.toString())
+                                "requestFriends",
+                                FieldValue.arrayRemove(user.uid)
                             )
                             .addOnSuccessListener {
                                 println("${user_name_list.text.toString()} 친구 수락")
@@ -126,7 +127,7 @@ class FriendsActivity : AppCompatActivity() {
                                 println("${user_name_list.text.toString()} 친구 수락 실패")
                             }
 
-                        db.collection("users").document(user_uid_list.text.toString())
+                        db.collection("users").document(user_uid_list)
                             .update("friends", FieldValue.arrayUnion(user.uid.toString()))
                             .addOnSuccessListener {
                                 println("${user_name_list.text.toString()} 친구 수락")
@@ -141,12 +142,25 @@ class FriendsActivity : AppCompatActivity() {
                         db.collection("users").document(user!!.uid)
                             .update(
                                 "friends",
-                                FieldValue.arrayRemove(user_uid_list.text.toString())
+                                FieldValue.arrayRemove(user_uid_list)
                             )
                             .addOnSuccessListener {
                                 println("${user_name_list.text.toString()} 친구 삭제")
                                 itemView.findViewById<Button>(R.id.friend_add).text = "친구 추가"
-                                users = tempUsers()
+//                                users = tempUsers()
+                            }
+                            .addOnFailureListener {
+                                println("${user_name_list.text.toString()} 친구 삭제 실패")
+                            }
+
+                        db.collection("users").document(user_uid_list)
+                            .update(
+                                "friends",
+                                FieldValue.arrayRemove(user.uid)
+                            )
+                            .addOnSuccessListener {
+                                println("${user_name_list.text.toString()} 친구 삭제")
+//                                users = tempUsers()
                             }
                             .addOnFailureListener {
                                 println("${user_name_list.text.toString()} 친구 삭제 실패")
@@ -171,7 +185,8 @@ class FriendsActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val user: Friend = filteredUsers[position]
 
-            holder.user_uid_list.text = user.uid
+            holder.user_uid_list = user.uid
+            holder.user_phone_list.text = user.phone
             holder.user_name_list.text = user.name
             holder.btn.text = user.button
             if (holder.btn.text.equals("수락 대기"))
@@ -245,7 +260,7 @@ class FriendsActivity : AppCompatActivity() {
         println("tempUser 실행 중")
         val user = Firebase.auth.currentUser
         val db = Firebase.firestore
-        var member = Friend("", "", "")
+        var member = Friend("", "", "", "")
         val temp_user = ArrayList<Friend>()
 
         lateinit var friendlist: ArrayList<String>
@@ -283,7 +298,8 @@ class FriendsActivity : AppCompatActivity() {
 
                             member.name = document.data.get("name").toString()
                             member.uid = document.data.get("uid").toString()
-                            if (requestlist.contains(user.uid.toString())) {
+                            member.phone = document.data.get("phone").toString()
+                            if (requestlist.contains(user.uid)) {
                                 member.button = "친구 요청"
                                 println("배열 비교중 4")
                             } else if (friendrequestlist.contains(member.uid)) {
@@ -303,7 +319,7 @@ class FriendsActivity : AppCompatActivity() {
 
                             println(member.button)
                             if (!member.uid.equals(user?.uid.toString())) {
-                                temp_user.add(Friend(member.uid, member.name, member.button))
+                                temp_user.add(Friend(member.uid, member.phone, member.name, member.button))
                             }
                         }
                         setAdapter()

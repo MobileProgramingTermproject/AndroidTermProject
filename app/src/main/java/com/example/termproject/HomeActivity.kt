@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +21,15 @@ import com.google.firebase.ktx.Firebase
 
 class HomeActivity:AppCompatActivity() {
     val user = Firebase.auth.currentUser
-
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_layout) //login_layout 열기
+
+        Firebase.firestore.collection("users").document(user!!.uid).get()
+            .addOnSuccessListener {
+                findViewById<TextView>(R.id.MyName).text = it.data?.get("name").toString()
+            }
 
         findViewById<Button>(R.id.Button_Profile).setOnClickListener {
             val intent1 = Intent(this, ProfileActivity::class.java) //intent 생성 this에서 ProfileActivity로 이동
@@ -64,9 +68,12 @@ class HomeActivity:AppCompatActivity() {
 
         Firebase.firestore.collection("users").document(user!!.uid).get()
             .addOnSuccessListener{ document ->
-                friends = document.data?.get("friends") as ArrayList<String>
-                friends.add(user!!.uid)
-
+                if(document.data?.get("friends") == null){
+                    friends.add(user!!.uid)
+                }else {
+                    friends = document.data?.get("friends") as ArrayList<String>
+                    friends.add(user!!.uid)
+                }
                 Firebase.firestore.collection("post").orderBy("date", Query.Direction.DESCENDING).get()
                     .addOnSuccessListener { result ->
                         for (document in result) {
