@@ -91,6 +91,5 @@ class ProfileActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 }
